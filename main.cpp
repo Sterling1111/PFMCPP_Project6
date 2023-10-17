@@ -68,10 +68,9 @@ struct Comparator                                //4
 {
     T* compare(T* a, T* b) //5
     {
-        if(!a or !b) return nullptr;
+        if(a == nullptr or b == nullptr or a->value == b->value) return nullptr;
         if( a->value < b->value ) return a;
-        if( a->value > b->value ) return b;
-        return nullptr;
+        else return b;
     }
 };
 
@@ -81,7 +80,7 @@ struct U
 
     float update(float* updatedValue)      //12
     {
-        if(!updatedValue) return 0.0f;
+        if(updatedValue == nullptr) return 0.0f;
         std::cout << "U's value1 value: " << value1 << std::endl;
         value1 = *updatedValue;
         std::cout << "U's value1 updated value: " << value1 << std::endl;
@@ -98,7 +97,7 @@ struct T2
 {
     static float update(U* that, float* updatedValue )        //10
     {
-        if(!that or !updatedValue) return 0.0f;
+        if(that == nullptr or updatedValue == nullptr) return 0.0f;
         std::cout << "U's value1 value: " << that->value1 << std::endl;
         that->value1 = *updatedValue;
         std::cout << "U's value1 updated value: " << that->value1 << std::endl;
@@ -132,12 +131,13 @@ int main()
     
     Comparator f;                                            //7
     auto* smaller = f.compare(&t1, &t2);                              //8
-    if(!smaller)
+    if(smaller == nullptr)
     {
         std::cout << "f.compare() returned nullptr because values are equal or one of the pointers is nullptr." << std::endl;
     }
-    else {
-        std::cout << "the smaller one is" << smaller->name << std::endl; //9
+    else 
+    {
+        std::cout << "the smaller one is " << smaller->name << std::endl; //9
     }
     
     
