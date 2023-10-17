@@ -37,11 +37,11 @@ struct T
 
 struct Comparator                                //4
 {
-    T* compare(T* a, T* b) //5
+    T* compare(T& a, T& b) //5
     {
-        if(a == nullptr or b == nullptr or a->value == b->value) return nullptr;
-        if( a->value < b->value ) return a;
-        return b;
+        if(a.value == b.value) return nullptr;
+        if( a.value < b.value ) return &a;
+        return &b;
     }
 };
 
@@ -49,11 +49,10 @@ struct U
 {
     float value1 { 0 }, value2 { 0 };
 
-    float update(float* updatedValue)      //12
+    float update(const float& updatedValue)      //12
     {
-        if(updatedValue == nullptr) return 0.0f;
         std::cout << "U's value1 value: " << value1 << std::endl;
-        value1 = *updatedValue;
+        value1 = updatedValue;
         std::cout << "U's value1 updated value: " << value1 << std::endl;
         while( std::abs(value2 - value1) > 0.001f )
         {
@@ -66,18 +65,17 @@ struct U
 
 struct T2
 {
-    static float update(U* that, float* updatedValue )        //10
+    static float update(U& that, const float& updatedValue )        //10
     {
-        if(that == nullptr or updatedValue == nullptr) return 0.0f;
-        std::cout << "U's value1 value: " << that->value1 << std::endl;
-        that->value1 = *updatedValue;
-        std::cout << "U's value1 updated value: " << that->value1 << std::endl;
-        while( std::abs(that->value2 - that->value1) > 0.001f )
+        std::cout << "U's value1 value: " << that.value1 << std::endl;
+        that.value1 = updatedValue;
+        std::cout << "U's value1 updated value: " << that.value1 << std::endl;
+        while( std::abs(that.value2 - that.value1) > 0.001f )
         {
-            that->value2 += (that->value2 < that->value1 ? .0005f : -.0005f);
+            that.value2 += (that.value2 < that.value1 ? .0005f : -.0005f);
         }
-        std::cout << "U's value1 updated value: " << that->value2 << std::endl;
-        return that->value2 * that->value1;
+        std::cout << "U's value1 updated value: " << that.value2 << std::endl;
+        return that.value2 * that.value1;
     }
 };
         
@@ -101,10 +99,10 @@ int main()
     T t2(2, "t2");                                             //6
     
     Comparator f;                                            //7
-    auto* smaller = f.compare(&t1, &t2);                              //8
+    auto* smaller = f.compare(t1, t2);                              //8
     if(smaller == nullptr)
     {
-        std::cout << "f.compare() returned nullptr because values are equal or one of the pointers is nullptr." << std::endl;
+        std::cout << "f.compare() returned nullptr because values are equal." << std::endl;
     }
     else 
     {
@@ -114,8 +112,8 @@ int main()
     
     U u1;
     float updateValue = 5.f;
-    std::cout << "update u1's multiplied values: " << T2::update(&u1, &updateValue) << std::endl;                  //11
+    std::cout << "update u1's multiplied values: " << T2::update(u1, updateValue) << std::endl;                  //11
     
     U u2;
-    std::cout << "update u2's multiplied values: " << u2.update( &updateValue ) << std::endl;
+    std::cout << "update u2's multiplied values: " << u2.update( updateValue ) << std::endl;
 }
