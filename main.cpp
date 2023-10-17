@@ -70,7 +70,7 @@ struct Comparator                                //4
     {
         if(a == nullptr or b == nullptr or a->value == b->value) return nullptr;
         if( a->value < b->value ) return a;
-        else return b;
+        return b;
     }
 };
 
